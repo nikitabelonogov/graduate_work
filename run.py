@@ -1,32 +1,27 @@
-import cv2 as cv
+from __future__ import print_function
 
-frame_name = 'frame'
-cv.startWindowThread()
-cv.namedWindow(frame_name)
-faceCascade = cv.CascadeClassifier('haarcascade/haarcascade_frontalface_default.xml')
+import argparse
 
-camera = cv.VideoCapture(0)
+import helpers
+from GoogleAPI import GoogleAPI
+from OpenFace import OpenFace
 
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('google_api_key', help='Google API key')
+    args = parser.parse_args()
 
-while True:
-    ret, frame = camera.read()
+    googleAPI = GoogleAPI(args.google_api_key)
+    openFace = OpenFace('/root/openface/models/dlib/shape_predictor_68_face_landmarks.dat', '/root/openface/models/openface/nn4.small2.v1.t7')
 
-    gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-
-    faces = faceCascade.detectMultiScale(
-        gray,
-        scaleFactor=1.1,
-        minNeighbors=5,
-        minSize=(30, 30)
-    )
-
-    for (x, y, w, h) in faces:
-        cv.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
-    cv.imshow(frame_name, frame)
-
-    if cv.waitKey(1) & 0xFF == ord('q'):
-        break
-
-camera.release()
-cv.destroyAllWindows()
+    people_document = googleAPI.search("John", max_results=1)
+    if 'items' in people_document:
+        for person in people_document['items']:
+            described_person = googleAPI.get(person['id'])
+            image_url = described_person.get('image',    None).get('url', None)[:-6]
+            image = helpers.url_to_image(image_url)
+            rep = openFace.forward(openFace.face_align(image))
+            print(rep)
+            # print(described_person.get('gender',   None))
+            # print(described_person.get('birthday', None))
+            # print(described_person.get('url',      None))
