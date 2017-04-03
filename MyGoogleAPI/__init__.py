@@ -1,5 +1,5 @@
 
-class GoogleAPI:
+class MyGoogleAPI:
     def __init__(self, api_key):
         from googleapiclient.discovery import build
         service = build('plus', 'v1', developerKey=api_key)

@@ -3,7 +3,7 @@ from __future__ import print_function
 import openface
 
 
-class OpenFace:
+class MyOpenFace:
     def __init__(self, dlib_path, network_model, img_dim=96):
         self.dlib_path = dlib_path
         self.network_model = network_model
@@ -29,7 +29,7 @@ class OpenFace:
     # net = openface.TorchNeuralNet(networkModel, imgDim)
     # reps = []
 
-    # openFace = OpenFace('/root/openface/models/dlib/shape_predictor_68_face_landmarks.dat',
+    # openFace = MyOpenFace('/root/openface/models/dlib/shape_predictor_68_face_landmarks.dat',
     #                     '/root/openface/models/openface/nn4.small2.v1.t7')
 
     # for imagePath in imagePaths:
