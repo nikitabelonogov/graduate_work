@@ -1,22 +1,14 @@
 from flask import redirect
+from flask import render_template
 from flask import request
 
-from MyFlaskApp import app
-
 import helpers
+from MyFlaskApp import app, openFace, googleAPI
 
 
 @app.route('/', methods=['GET'])
 def index():
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-    '''
+    return render_template('index.html')
 
 
 @app.route('/', methods=['POST'])
@@ -27,4 +19,6 @@ def upload():
     if file.filename == '':
         return redirect(request.url)
     image = helpers.stream_to_image(file.stream)
-    return 'uploaded'
+    align = openFace.face_align(image)
+    rep = openFace.forward(align)
+    return str(rep)

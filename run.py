@@ -2,24 +2,28 @@ from __future__ import print_function
 
 import argparse
 
-import cv2
-
-import helpers
-from MyGoogleAPI import MyGoogleAPI
-from MyOpenFace import MyOpenFace
-from MyFlaskApp import app
+from MyFlaskApp import init
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('google_api_key', help='Google API key')
+    parser.add_argument('google_api_key', type=str, help='Google API key')
     parser.add_argument("-p", "--port", type=int, help="specify port to run app")
+    parser.add_argument("--network_model", type=str, help="network_model")
+    parser.add_argument("--dlib_path", type=str, help="dlib")
     args = parser.parse_args()
 
-    googleAPI = MyGoogleAPI(args.google_api_key)
-    openFace = MyOpenFace('/root/openface/models/dlib/shape_predictor_68_face_landmarks.dat',
-                          '/root/openface/models/openface/nn4.small2.v1.t7')
+    init(args.google_api_key, args.dlib_path, args.network_model)
+
+    from MyFlaskApp import app
 
     app.run(host='0.0.0.0', port=args.port)
+
+    # app.config['google_api_key'] = args.google_api_key
+    # app.config['dlib_path'] = args.dlib_path
+    # app.config['network_model'] = args.network_model
+
+    # googleAPI = MyGoogleAPI(app.config['google_api_key'])
+    # openFace = MyOpenFace(app.config['dlib_path'], app.config['network_model'])
 
     # people_document = googleAPI.search("John", max_results=1)
     # if 'items' in people_document:
