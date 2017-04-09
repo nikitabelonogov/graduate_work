@@ -3,7 +3,7 @@ from flask import render_template
 from flask import request
 
 import helpers
-from MyFlaskApp import app, openFace, googleAPI
+from MyFlaskApp import app, openFace, clf
 
 
 @app.route('/', methods=['GET'])
@@ -21,4 +21,4 @@ def upload():
     image = helpers.stream_to_image(file.stream)
     align = openFace.face_align(image)
     rep = openFace.forward(align)
-    return str(rep)
+    return str(clf.predict([rep])[0])
