@@ -5,6 +5,10 @@ from sklearn import svm
 
 class MyClassificator:
     def __init__(self, data_path):
+        """
+
+        :param data_path:
+        """
         self.gender = svm.SVC()
         self.place = svm.SVC()
         with open(data_path, 'rb') as input:

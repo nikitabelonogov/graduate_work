@@ -10,10 +10,22 @@ from MyOpenFace import MyOpenFace
 
 
 def help(bot, update):
+    """
+
+    :param bot: bot
+    :param update: update
+    :return:
+    """
     bot.sendMessage(chat_id=update.message.chat_id, text=help_message, parse_mode='HTML')
 
 
 def hello(bot, update):
+    """
+
+    :param bot:
+    :param update:
+    :return:
+    """
     new_file = bot.getFile(update.message.photo[-1].file_id)
     new_file.download(new_file.file_id)
     image = cv2.imread(new_file.file_id)
@@ -29,10 +41,22 @@ def hello(bot, update):
 
 
 def error(bot, update, error):
+    """
+
+    :param bot:
+    :param update:
+    :param error:
+    :return:
+    """
     logger.warn('Update "%s" caused error "%s"' % (update, error))
 
 
 def main(token):
+    """
+
+    :param token:
+    :return:
+    """
     updater = Updater(token)
 
     dispatcher = updater.dispatcher
@@ -46,11 +70,23 @@ def main(token):
     updater.idle()
 
 
+def init(dlib_path, network_model, data_path):
+    """
+
+    :param dlib_path:
+    :param network_model:
+    :param data_path:
+    :return:
+    """
+    global openFace
+    global clf
+    openFace = MyOpenFace(dlib_path, network_model)
+    clf = MyClassificator(data_path)
+
+
 help_message = 'Send me ur face photo and I\'ll tell u who u r.'
+openFace = None
+clf = None
 
-openFace = MyOpenFace(dlib_path, network_model)
-clf = MyClassificator(data_path)
-
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)

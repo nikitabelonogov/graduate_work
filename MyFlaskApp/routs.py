@@ -8,11 +8,19 @@ from MyFlaskApp import app, openFace, clf
 
 @app.route('/', methods=['GET'])
 def index():
+    """
+
+    :return:
+    """
     return render_template('index.html')
 
 
 @app.route('/', methods=['POST'])
 def upload():
+    """
+
+    :return:
+    """
     if 'file' not in request.files:
         return redirect(request.url)
     file = request.files['file']
