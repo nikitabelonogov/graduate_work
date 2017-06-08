@@ -21,4 +21,4 @@ def upload():
     image = helpers.stream_to_image(file.stream)
     align = openFace.face_align(image)
     rep = openFace.forward(align)
-    return str(clf.predict([rep])[0])
+    return str(clf.gender.predict([rep])[0])
