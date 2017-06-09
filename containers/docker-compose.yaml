@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  flask_application:
+    container_name: flask_application
+    build:
+      context: ./FlaskApp
+      args:
+        workspace: "/workspace"
+        codespace: "/../.."
+    image: graduate_work/flask_application:latest
+    environment:
+      workspace: "/workspace"
+      codespace: "../.."
+      HOST: "0.0.0.0"
+      PORT: "8080"
+      DLIB_PATH: "/root/openface/models/dlib/shape_predictor_68_face_landmarks.dat"
+      NETWORK_MODEL: "/root/openface/models/openface/nn4.small2.v1.t7"
+      DATA_URL: "data.pkl"
+      DATA_PATH: "${workspace}/data/data.pkl"
+      POSTGRES_DB: skillmapper
+    ports:
+      - "80:8080"
+    networks:
+      - service-network
+
+  telegram_bot:
+    container_name: app
+    build:
+      context: ./TelegramBot
+      args:
+        workspace: "/workspace"
+        codespace: "../.."
+    image: graduate_work/telegram_bot:latest
+    environment:
+      workspace: "/workspace"
+      codespace: "../.."
+      TOKEN: ""
+      HOST: "0.0.0.0"
+      PORT: "8080"
+    ports:
+      - "80:8080"
+    depends_on:
+      - flask_application
+    networks:
+      - service-network
+
+networks:
+  service-network:
+    driver: bridge
