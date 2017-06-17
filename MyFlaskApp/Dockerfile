@@ -22,6 +22,8 @@ RUN apt-get install -y \
     python-pip \
     bash
 
+EXPOSE ${PORT}
+
 # Install dependencies
 COPY ${codespace}/requirements.txt ${workspace}/requirements.txt
 RUN pip install -r ${workspace}/requirements.txt
@@ -30,22 +32,14 @@ RUN pip install -r ${workspace}/requirements.txt
 COPY ${codespace}/MyClassificator ${workspace}/MyClassificator
 COPY ${codespace}/MyOpenFace ${workspace}/MyOpenFace
 
-# Copy helpers script
-COPY ${codespace}/helpers.py ${workspace}
-
 # Copy flask application's source code
-COPY ${codespace}/MyFlaskApp ${workspace}/MyFlaskApp
+COPY ${codespace}/FlaskApp ${workspace}/FlaskApp
 
 # Copy run script
 COPY ${codespace}/run.py ${workspace}/
 
-# Dowload/Copy data
-ADD ${DATA_URL} ${DATA_PATH}
+# Copy entrypoit
+COPY ${codespace}/entrypoit.sh ${workspace}/
+RUN chmod +x ${workspace}/entrypoit.sh
 
-CMD cd /workspace && \
-    python run.py \
-    --Host "${HOST}" \
-    --Port "${PORT}" \
-    --Data "${workspace}/data/data.pkl" \
-    --dlib_path "${DLIB_PATH}" \
-    --network_model "${NETWORK_MODEL}"
+CMD ${workspace}/entrypoit.sh

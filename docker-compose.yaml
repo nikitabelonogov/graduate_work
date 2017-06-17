@@ -7,20 +7,19 @@ services:
       context: ./MyFlaskApp
       args:
         workspace: "/workspace"
-        codespace: ""
+        codespace: "./"
     image: graduate_work/flask_application:latest
     environment:
       workspace: "/workspace"
-      codespace: "../.."
+      codespace: "./"
       HOST: "0.0.0.0"
       PORT: "8080"
       DLIB_PATH: "/root/openface/models/dlib/shape_predictor_68_face_landmarks.dat"
       NETWORK_MODEL: "/root/openface/models/openface/nn4.small2.v1.t7"
-      DATA_URL: "data.pkl"
-      DATA_PATH: "${workspace}/data/data.pkl"
-      POSTGRES_DB: skillmapper
+      DATA_URL: "https://s3-eu-west-1.amazonaws.com/graduate-work/data.pkl"
+      DATA_PATH: "/workspace/data"
     ports:
-      - "80:8080"
+      - "80:8080/tcp"
     networks:
       - service-network
 
@@ -30,16 +29,16 @@ services:
       context: ./MyTelegramBot
       args:
         workspace: "/workspace"
-        codespace: "../.."
+        codespace: "./"
     image: graduate_work/telegram_bot:latest
     environment:
       workspace: "/workspace"
-      codespace: "../.."
+      codespace: "./"
       TOKEN: ""
       HOST: "0.0.0.0"
       PORT: "8080"
     ports:
-      - "80:8080"
+      - "80:8080/tcp"
     depends_on:
       - flask_application
     networks:

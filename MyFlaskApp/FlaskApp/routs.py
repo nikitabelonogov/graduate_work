@@ -3,7 +3,7 @@ from flask import redirect
 from flask import render_template
 from flask import request
 
-from MyFlaskApp import helpers
+from FlaskApp import helpers
 
 
 @app.route('/', methods=['GET'])
