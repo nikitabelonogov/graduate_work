@@ -4,7 +4,7 @@ ARG workspace
 ARG codespace
 
 ENV workspace=${workspace:-"/workspace"}
-ENV codespace=${codespace:-"../.."}
+ENV codespace=${codespace:-"./"}
 ENV HOST="0.0.0.0"
 ENV PORT="8080"
 ENV DLIB_PATH="/root/openface/models/dlib/shape_predictor_68_face_landmarks.dat"

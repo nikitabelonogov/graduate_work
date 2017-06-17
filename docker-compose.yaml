@@ -7,7 +7,7 @@ services:
       context: ./FlaskApp
       args:
         workspace: "/workspace"
-        codespace: "/../.."
+        codespace: ""
     image: graduate_work/flask_application:latest
     environment:
       workspace: "/workspace"

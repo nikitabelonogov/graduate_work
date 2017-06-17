@@ -1,9 +1,9 @@
+from FlaskApp import app, openFace, clf
 from flask import redirect
 from flask import render_template
 from flask import request
 
-import helpers
-from MyFlaskApp import app, openFace, clf
+from MyFlaskApp import helpers
 
 
 @app.route('/', methods=['GET'])

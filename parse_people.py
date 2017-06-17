@@ -1,12 +1,13 @@
 from __future__ import print_function
+
 import pickle
-import names
-import time
 import threading
 
-import helpers
+import names
 from MyGoogleAPI import MyGoogleAPI
 from MyOpenFace import MyOpenFace
+
+from MyFlaskApp import helpers
 
 google_api_key = 'AIzaSyAbXvzhgQj-NVxRpn77JpLXlyuttGpvLyg'
 dlib_path = '/root/openface/models/dlib/shape_predictor_68_face_landmarks.dat'
