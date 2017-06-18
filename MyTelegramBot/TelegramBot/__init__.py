@@ -2,11 +2,18 @@ from __future__ import print_function
 
 import logging
 
-import cv2
+import requests
+from io import BytesIO
+
+import helpers
+
 from telegram.ext import *
 
-from MyClassificator import MyClassificator
-from MyOpenFace import MyOpenFace
+backend_url = None
+help_message = 'Send me ur face photo and I\'ll tell u who u r.'
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def help(bot, update):
@@ -27,17 +34,13 @@ def hello(bot, update):
     :return:
     """
     new_file = bot.getFile(update.message.photo[-1].file_id)
-    new_file.download(new_file.file_id)
-    image = cv2.imread(new_file.file_id)
-    aligned_face = openFace.face_align(image)
-    if aligned_face is None:
-        bot.sendMessage(chat_id=update.message.chat_id, text='Face is not found.')
-    else:
-        rep = openFace.forward(aligned_face)
-        cv2.imwrite(new_file.file_id + '_marked.jpg', aligned_face)
-        bot.sendPhoto(chat_id=update.message.chat_id, photo=open(new_file.file_id + '_marked.jpg', 'rb'))
-        message = '\n'.join([str(clf.gender.predict([rep])[0])])
-        bot.sendMessage(chat_id=update.message.chat_id, text=message)
+    # new_file.download(new_file.file_id)
+
+    response = requests.get(new_file.file_path)
+    image = BytesIO(response.content)
+
+    response = requests.post(backend_url, files={"file": image})
+    bot.sendMessage(chat_id=update.message.chat_id, text=response.content)
 
 
 def error(bot, update, error):
@@ -48,15 +51,20 @@ def error(bot, update, error):
     :param error:
     :return:
     """
-    logger.warn('Update "%s" caused error "%s"' % (update, error))
+    logger.warn("Update {} caused error {}".format(update, error))
 
 
-def main(token):
+def main(token, _backend_url):
     """
 
+    :param _backend_url:
     :param token:
     :return:
     """
+    global backend_url
+    backend_url = _backend_url
+    logger.info("BackEnd URL: {}".format(backend_url))
+
     updater = Updater(token)
 
     dispatcher = updater.dispatcher
@@ -67,26 +75,6 @@ def main(token):
     dispatcher.add_error_handler(error)
 
     updater.start_polling()
+    logger.info("Pooling started")
     updater.idle()
 
-
-def init(dlib_path, network_model, data_path):
-    """
-
-    :param dlib_path:
-    :param network_model:
-    :param data_path:
-    :return:
-    """
-    global openFace
-    global clf
-    openFace = MyOpenFace(dlib_path, network_model)
-    clf = MyClassificator(data_path)
-
-
-help_message = 'Send me ur face photo and I\'ll tell u who u r.'
-openFace = None
-clf = None
-
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-logger = logging.getLogger(__name__)

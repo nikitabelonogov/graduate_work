@@ -1,33 +1,28 @@
-FROM bamos/openface:latest
+FROM python:2.7.13-alpine
 
 ARG workspace
 ARG codespace
 
 ENV workspace=${workspace:-"/workspace"}
-ENV codespace=${codespace:-"../.."}
+ENV codespace=${codespace:-"./"}
 ENV TOKEN=""
 ENV HOST="0.0.0.0"
 ENV PORT="8080"
 
 WORKDIR ${workspace}
 
-# Install libraries
-RUN apt-get update -y
-RUN apt-get upgrade -y
-RUN apt-get install -y \
-    python \
-    bash
+# Install dependencies
+COPY ${codespace}/requirements.txt ${workspace}/requirements.txt
+RUN pip install -r ${workspace}/requirements.txt
 
 # Copy telegram bot's source code
 COPY ${codespace}/TelegramBot ${workspace}/TelegramBot
 
 # Copy run script
-COPY ${codespace}/run_bot.py ${workspace}/
+COPY ${codespace}/run.py ${workspace}/
 
-CMD cd /workspace && \
-    python run.py \
-    --Host ${HOST} \
-    --Port ${PORT} \
-    --Data ${DATA_PATH} \
-    --dlib_path ${DLIB_PATH} \
-    --network_model ${NETWORK_MODEL}
+# Copy entrypoit
+COPY ${codespace}/entrypoit.sh ${workspace}/
+RUN chmod +x ${workspace}/entrypoit.sh
+
+CMD ${workspace}/entrypoit.sh

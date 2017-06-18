@@ -24,7 +24,7 @@ services:
       - service-network
 
   telegram_bot:
-    container_name: app
+    container_name: telegram_bot
     build:
       context: ./MyTelegramBot
       args:
@@ -34,11 +34,11 @@ services:
     environment:
       workspace: "/workspace"
       codespace: "./"
-      TOKEN: ""
-      HOST: "0.0.0.0"
+      TOKEN: "${TOKEN}"
+      HOST: "flask_application"
       PORT: "8080"
-    ports:
-      - "80:8080/tcp"
+#    ports:
+#      - "80:8080/tcp"
     depends_on:
       - flask_application
     networks:

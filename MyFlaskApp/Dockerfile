@@ -22,8 +22,6 @@ RUN apt-get install -y \
     python-pip \
     bash
 
-EXPOSE ${PORT}
-
 # Install dependencies
 COPY ${codespace}/requirements.txt ${workspace}/requirements.txt
 RUN pip install -r ${workspace}/requirements.txt
