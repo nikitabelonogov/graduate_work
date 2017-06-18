@@ -1,4 +1,4 @@
-version: '3'
+version: '2.1'
 
 services:
   flask_application:
@@ -20,6 +20,11 @@ services:
       DATA_PATH: "/workspace/data"
     ports:
       - "80:8080/tcp"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 15s
+      retries: 3
     networks:
       - service-network
 
@@ -38,7 +43,8 @@ services:
       HOST: "flask_application"
       PORT: "8080"
     depends_on:
-      - flask_application
+      flask_application:
+        condition: service_healthy
     networks:
       - service-network
 
