@@ -14,8 +14,8 @@ dlib_path = '/root/openface/models/dlib/shape_predictor_68_face_landmarks.dat'
 network_model = '/root/openface/models/openface/nn4.small2.v1.t7'
 
 
-# googleAPI = MyGoogleAPI(google_api_key)
-# openFace = MyOpenFace(dlib_path, network_model)
+googleAPI = MyGoogleAPI(google_api_key)
+openFace = MyOpenFace(dlib_path, network_model)
 
 
 def worker(num, query):

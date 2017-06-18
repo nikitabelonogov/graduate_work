@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 def help(bot, update):
     """
-
+    Sends it to users help message.
     :param bot: bot
     :param update: update
     :return:
@@ -26,13 +26,12 @@ def help(bot, update):
 
 def hello(bot, update):
     """
-
-    :param bot:
-    :param update:
+    Gets the photo. Sends it to backend. Gets response. Sends it to users.
+    :param bot: update
+    :param update: update
     :return:
     """
     new_file = bot.getFile(update.message.photo[-1].file_id)
-    # new_file.download(new_file.file_id)
 
     response = requests.get(new_file.file_path)
     image = BytesIO(response.content)
@@ -43,10 +42,10 @@ def hello(bot, update):
 
 def error(bot, update, error):
     """
-
-    :param bot:
-    :param update:
-    :param error:
+    Error log.
+    :param bot: bot
+    :param update: update
+    :param error: error
     :return:
     """
     logger.warn("Update {} caused error {}".format(update, error))
@@ -54,9 +53,9 @@ def error(bot, update, error):
 
 def main(token, _backend_url):
     """
-
-    :param _backend_url:
-    :param token:
+    Creates and configures telegram bot.
+    :param _backend_url: back end url
+    :param token: telegram bot token
     :return:
     """
     global backend_url

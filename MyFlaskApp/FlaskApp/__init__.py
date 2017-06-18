@@ -10,10 +10,10 @@ clf = None
 
 def init(dlib_path, network_model, data_path):
     """
-
-    :param dlib_path:
-    :param network_model:
-    :param data_path:
+    Inits the application.
+    :param dlib_path: path to dlib
+    :param network_model: path to network model
+    :param data_path: path to data
     :return:
     """
     global app

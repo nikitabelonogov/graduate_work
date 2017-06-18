@@ -6,8 +6,8 @@ from sklearn import svm
 class MyClassificator:
     def __init__(self, data_path):
         """
-
-        :param data_path:
+        Reads data and train classificator.
+        :param data_path: path to data.
         """
         self.gender = svm.SVC()
         self.place = svm.SVC()
