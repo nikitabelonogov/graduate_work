@@ -37,8 +37,6 @@ services:
       TOKEN: "${TOKEN}"
       HOST: "flask_application"
       PORT: "8080"
-#    ports:
-#      - "80:8080/tcp"
     depends_on:
       - flask_application
     networks:
