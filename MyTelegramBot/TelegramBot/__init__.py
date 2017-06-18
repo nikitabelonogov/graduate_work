@@ -5,8 +5,6 @@ import logging
 import requests
 from io import BytesIO
 
-import helpers
-
 from telegram.ext import *
 
 backend_url = None
